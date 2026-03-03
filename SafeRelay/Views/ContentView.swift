@@ -1146,11 +1146,6 @@ struct ContentView: View {
                             .font(.SafeRelaySystem(size: 14, weight: .medium, design: .monospaced))
                             .foregroundColor(textColor)
                             .lineLimit(1)
-                        if !profileManager.profile.bloodGroup.isEmpty {
-                            Label(profileManager.profile.bloodGroup, systemImage: "drop.fill")
-                                .font(.system(size: 10))
-                                .foregroundColor(.red)
-                        }
                     }
                 }
             }
