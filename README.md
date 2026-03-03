@@ -106,7 +106,7 @@ Run `just clean` afterwards to restore things to original state for mobile app b
 
 ## Localization
 
-- Base app resources live under `SafeRelay/Localization/Base.lproj/`. Add new copy to `Localizable.strings` and plural rules to `Localizable.stringsdict`.
+- Base app resources live under `Localization/Base.lproj/`. Add new copy to `Localizable.strings` and plural rules to `Localizable.stringsdict`.
 - Share extension strings are separate in `SafeRelayShareExtension/Localization/Base.lproj/Localizable.strings`.
 - Prefer keys that describe intent (`app_info.features.offline.title`) and reuse existing ones where possible.
 - Run `xcodebuild -project SafeRelay.xcodeproj -scheme "SafeRelay (macOS)" -configuration Debug CODE_SIGNING_ALLOWED=NO build` to compile-check any localization updates.
