@@ -1,16 +1,8 @@
-<img width="256" height="256" alt="icon_128x128@2x" src="https://github.com/user-attachments/assets/90133f83-b4f6-41c6-aab9-25d0859d2a47" />
-
-## CrisisMesh
+## SafeRelay
 
 A decentralized peer-to-peer messaging app with dual transport architecture: local Bluetooth mesh networks for offline communication and internet-based Nostr protocol for global reach. No accounts, no phone numbers, no central servers. It's the side-groupchat.
 
-[CrisisMesh.free](http://CrisisMesh.free)
 
-📲 [App Store](https://apps.apple.com/us/app/CrisisMesh-mesh/id6748219622)
-
-## License
-
-This project is released into the public domain. See the [LICENSE](LICENSE) file for details.
 
 ## Features
 
@@ -25,9 +17,8 @@ This project is released into the public domain. See the [LICENSE](LICENSE) file
 - **Emergency Wipe**: Triple-tap to instantly clear all data
 - **Performance Optimizations**: LZ4 message compression, adaptive battery modes, and optimized networking
 
-## [Technical Architecture](https://deepwiki.com/permissionlesstech/CrisisMesh)
 
-BitChat uses a **hybrid messaging architecture** with two complementary transport layers:
+SafeRelay uses a **hybrid messaging architecture** with two complementary transport layers:
 
 ### Bluetooth Mesh Network (Offline)
 
@@ -87,23 +78,22 @@ Private messages use **intelligent transport selection**:
    - Messages queued until transport becomes available
    - Automatic delivery when connection established
 
-For detailed protocol documentation, see the [Technical Whitepaper](WHITEPAPER.md).
 
 ## Setup
 
 ### Option 1: Using Xcode
 
    ```bash
-   cd CrisisMesh
-   open CrisisMesh.xcodeproj
+   cd SafeRelay
+   open SafeRelay.xcodeproj
    ```
 
    To run on a device there're a few steps to prepare the code:
    - Clone the local configs: `cp Configs/Local.xcconfig.example Configs/Local.xcconfig`
    - Add your Developer Team ID into the newly created `Configs/Local.xcconfig`
-      - Bundle ID would be set to `chat.CrisisMesh.<team_id>` (unless you set to something else)
+      - Bundle ID would be set to `chat.SafeRelay.<team_id>` (unless you set to something else)
    - Entitlements need to be updated manually (TODO: Automate):
-      - Search and replace `group.chat.CrisisMesh` with `group.<your_bundle_id>` (e.g. `group.chat.CrisisMesh.ABC123`)
+      - Search and replace `group.chat.SafeRelay` with `group.<your_bundle_id>` (e.g. `group.chat.SafeRelay.ABC123`)
 
 ### Option 2: Using `just`
 
@@ -116,8 +106,7 @@ Run `just clean` afterwards to restore things to original state for mobile app b
 
 ## Localization
 
-- Base app resources live under `CrisisMesh/Localization/Base.lproj/`. Add new copy to `Localizable.strings` and plural rules to `Localizable.stringsdict`.
-- Share extension strings are separate in `CrisisMeshShareExtension/Localization/Base.lproj/Localizable.strings`.
+- Base app resources live under `SafeRelay/Localization/Base.lproj/`. Add new copy to `Localizable.strings` and plural rules to `Localizable.stringsdict`.
+- Share extension strings are separate in `SafeRelayShareExtension/Localization/Base.lproj/Localizable.strings`.
 - Prefer keys that describe intent (`app_info.features.offline.title`) and reuse existing ones where possible.
-- Run `xcodebuild -project CrisisMesh.xcodeproj -scheme "CrisisMesh (macOS)" -configuration Debug CODE_SIGNING_ALLOWED=NO build` to compile-check any localization updates.
-# SafeRelay
+- Run `xcodebuild -project SafeRelay.xcodeproj -scheme "SafeRelay (macOS)" -configuration Debug CODE_SIGNING_ALLOWED=NO build` to compile-check any localization updates.
