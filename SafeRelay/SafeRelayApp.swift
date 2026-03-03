@@ -69,6 +69,23 @@ struct SafeRelayApp: App {
 
                     // Check for shared content
                     checkForSharedContent()
+                    
+                    // Request location permission on first launch
+                    // If granted, the location toggle will be auto-enabled
+                    MapViewModel.shared.requestLocation()
+                    
+                    // After a brief moment, enable location toggle if permission was already granted
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        let status = MapViewModel.shared.locationAuthStatus
+                        #if os(iOS)
+                        let granted = status == .authorizedWhenInUse || status == .authorizedAlways
+                        #else
+                        let granted = status == .authorized || status == .authorizedAlways
+                        #endif
+                        if granted {
+                            UserDefaults.standard.set(true, forKey: "attachLocation")
+                        }
+                    }
                 }
                 .onOpenURL { url in
                     handleURL(url)

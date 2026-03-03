@@ -71,6 +71,10 @@ struct ContentView: View {
     // Offline Disaster Map Layer
     @State private var showDisasterMap = false
     
+    // Profile
+    @State private var showProfile = false
+    @StateObject private var profileManager = UserProfileManager.shared
+    
 #if os(iOS)
     @State private var showImagePicker = false
     @State private var imagePickerSourceType: UIImagePickerController.SourceType = .camera
@@ -1087,6 +1091,16 @@ struct ContentView: View {
     }
 
     // Compute channel-aware people count and color for toolbar (cross-platform)
+    private var profileInitials: String {
+        let name = profileManager.profile.fullName
+        if name.isEmpty {
+            let n = viewModel.nickname
+            return n.isEmpty ? "?" : String(n.prefix(1)).uppercased()
+        }
+        let parts = name.split(separator: " ")
+        return parts.prefix(2).compactMap { $0.first }.map(String.init).joined().uppercased()
+    }
+
     private func channelPeopleCountAndColor() -> (Int, Color) {
         let counts = viewModel.allPeers.reduce(into: (others: 0, mesh: 0)) { counts, peer in
             guard peer.peerID != viewModel.meshService.myPeerID else { return }
@@ -1113,31 +1127,34 @@ struct ContentView: View {
                     showAppInfo = true
                 }
             
-            HStack(spacing: 0) {
-                Text(verbatim: "@")
-                    .font(.SafeRelaySystem(size: 14, design: .monospaced))
-                    .foregroundColor(secondaryTextColor)
-                
-                TextField("content.input.nickname_placeholder", text: $viewModel.nickname)
-                    .textFieldStyle(.plain)
-                    .font(.SafeRelaySystem(size: 14, design: .monospaced))
-                    .frame(maxWidth: 80)
-                    .foregroundColor(textColor)
-                    .focused($isNicknameFieldFocused)
-                    .autocorrectionDisabled(true)
-                    #if os(iOS)
-                    .textInputAutocapitalization(.never)
-                    #endif
-                    .onChange(of: isNicknameFieldFocused) { isFocused in
-                        if !isFocused {
-                            // Only validate when losing focus
-                            viewModel.validateAndSaveNickname()
+            // Profile avatar button replacing naked @nickname
+            Button(action: { showProfile = true }) {
+                HStack(spacing: 8) {
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient(
+                                colors: [.red, .orange],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing))
+                            .frame(width: 30, height: 30)
+                        Text(profileInitials)
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(.white)
+                    }
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(profileManager.profile.fullName.isEmpty ? viewModel.nickname : profileManager.profile.fullName)
+                            .font(.SafeRelaySystem(size: 14, weight: .medium, design: .monospaced))
+                            .foregroundColor(textColor)
+                            .lineLimit(1)
+                        if !profileManager.profile.bloodGroup.isEmpty {
+                            Label(profileManager.profile.bloodGroup, systemImage: "drop.fill")
+                                .font(.system(size: 10))
+                                .foregroundColor(.red)
                         }
                     }
-                    .onSubmit {
-                        viewModel.validateAndSaveNickname()
-                    }
+                }
             }
+            .buttonStyle(.plain)
             
             Spacer()
             
@@ -1211,6 +1228,9 @@ struct ContentView: View {
                     .frame(minWidth: 600, minHeight: 500)
             }
             #endif
+            .sheet(isPresented: $showProfile) {
+                UserProfileView()
+            }
         }
         .frame(height: headerHeight)
         .padding(.horizontal, 12)
@@ -1472,6 +1492,20 @@ private extension ContentView {
     
     private var locationToggleButton: some View {
         Button(action: {
+            // Request location permission if not yet determined
+            let status = MapViewModel.shared.locationAuthStatus
+            #if os(iOS)
+            let denied = status == .denied || status == .restricted
+            let notDetermined = status == .notDetermined
+            #else
+            let denied = status == .denied || status == .restricted
+            let notDetermined = status == .notDetermined
+            #endif
+            if notDetermined {
+                MapViewModel.shared.requestLocation()
+            } else if denied {
+                // Already denied — just toggle for UX, real location won't attach
+            }
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 attachLocation.toggle()
             }
