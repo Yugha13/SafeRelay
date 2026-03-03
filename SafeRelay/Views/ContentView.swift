@@ -1127,29 +1127,15 @@ struct ContentView: View {
                     showAppInfo = true
                 }
             
-            // Profile avatar button replacing naked @nickname
+            // Tappable username → opens profile
             Button(action: { showProfile = true }) {
-                HStack(spacing: 8) {
-                    ZStack {
-                        Circle()
-                            .fill(LinearGradient(
-                                colors: [.red, .orange],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing))
-                            .frame(width: 30, height: 30)
-                        Text(profileInitials)
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.white)
-                    }
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(profileManager.profile.fullName.isEmpty ? viewModel.nickname : profileManager.profile.fullName)
-                            .font(.SafeRelaySystem(size: 14, weight: .medium, design: .monospaced))
-                            .foregroundColor(textColor)
-                            .lineLimit(1)
-                    }
-                }
+                Text(profileManager.profile.fullName.isEmpty ? viewModel.nickname : profileManager.profile.fullName)
+                    .font(.SafeRelaySystem(size: 14, weight: .medium, design: .monospaced))
+                    .foregroundColor(textColor)
+                    .lineLimit(1)
             }
             .buttonStyle(.plain)
+
             
             Spacer()
             
