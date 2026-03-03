@@ -6,13 +6,13 @@
 	<array>
 		<dict>
 			<key>BinaryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>HeadersPath</key>
 			<string>Headers</string>
 			<key>LibraryIdentifier</key>
 			<string>macos-arm64</string>
 			<key>LibraryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>
@@ -22,13 +22,13 @@
 		</dict>
 		<dict>
 			<key>BinaryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>HeadersPath</key>
 			<string>Headers</string>
 			<key>LibraryIdentifier</key>
 			<string>ios-arm64</string>
 			<key>LibraryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>
@@ -38,13 +38,13 @@
 		</dict>
 		<dict>
 			<key>BinaryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>HeadersPath</key>
 			<string>Headers</string>
 			<key>LibraryIdentifier</key>
 			<string>ios-arm64-simulator</string>
 			<key>LibraryPath</key>
-			<string>libarti_CrisisMesh.a</string>
+			<string>libarti_SafeRelay.a</string>
 			<key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>

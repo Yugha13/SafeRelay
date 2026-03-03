@@ -61,8 +61,8 @@ graph TD
     style D fill:#7eadff
 ```
 
-*   **Application Layer:** Defines the structure of user-facing messages (`BitchatMessage`), acknowledgments (`DeliveryAck`), and other application-level data.
-*   **Session Layer:** Manages the overall communication packet (`BitchatPacket`). This includes routing information (TTL), message typing, fragmentation, and serialization into a compact binary format.
+*   **Application Layer:** Defines the structure of user-facing messages (`SafeRelayMessage`), acknowledgments (`DeliveryAck`), and other application-level data.
+*   **Session Layer:** Manages the overall communication packet (`SafeRelayPacket`). This includes routing information (TTL), message typing, fragmentation, and serialization into a compact binary format.
 *   **Encryption Layer:** Establishes and manages secure channels using the Noise Protocol Framework. It is responsible for the cryptographic handshake, session management, and transport message encryption/decryption.
 *   **Transport Layer:** The underlying physical medium used for data transmission, such as Bluetooth Low Energy (BLE). This layer is abstracted away from the core protocol.
 
@@ -161,11 +161,11 @@ The `NoiseSessionManager` class manages all active Noise sessions. It handles:
 
 ## 6. The BitChat Session and Application Protocol
 
-Once a Noise session is established, peers exchange `BitchatPacket` structures, which are encrypted as the payload of Noise transport messages.
+Once a Noise session is established, peers exchange `SafeRelayPacket` structures, which are encrypted as the payload of Noise transport messages.
 
-### 6.1. Binary Packet Format (`BitchatPacket`)
+### 6.1. Binary Packet Format (`SafeRelayPacket`)
 
-To minimize bandwidth, `BitchatPacket`s are serialized into a compact binary format. The structure is designed to be fixed-size where possible to resist traffic analysis.
+To minimize bandwidth, `SafeRelayPacket`s are serialized into a compact binary format. The structure is designed to be fixed-size where possible to resist traffic analysis.
 
 | Field           | Size (bytes) | Description                                                                                             |
 |-----------------|--------------|---------------------------------------------------------------------------------------------------------|
@@ -190,7 +190,7 @@ config:
   theme: dark
 ---
 ---
-title: "BitchatPacket"
+title: "SafeRelayPacket"
 ---
 packet
 +8: "Version"
@@ -204,11 +204,11 @@ packet
 +48: "Payload (variable)"
 +64: "Signature (optional)"
 ```
-_A representation of the sizes of the fields in `BitchatPacket`_
+_A representation of the sizes of the fields in `SafeRelayPacket`_
 
-### 6.2. Application Message Format (`BitchatMessage`)
+### 6.2. Application Message Format (`SafeRelayMessage`)
 
-For packets of type `message`, the payload is a binary-serialized `BitchatMessage` containing the chat content.
+For packets of type `message`, the payload is a binary-serialized `SafeRelayMessage` containing the chat content.
 
 | Field               | Size (bytes) | Description                                                              |
 |---------------------|--------------|--------------------------------------------------------------------------|
@@ -226,7 +226,7 @@ config:
   theme: dark
 ---
 ---
-title: "BitchatMessage"
+title: "SafeRelayMessage"
 ---
 packet
 +8: "Flags"
@@ -237,7 +237,7 @@ packet
 +32: "Original Sender (variable) (optional)"
 +32: "Recipient Nickname (variable) (optional)"
 ```
-_A representation of the sizes of the fields in `BitchatMessage`_
+_A representation of the sizes of the fields in `SafeRelayMessage`_
 
 ---
 
@@ -265,13 +265,13 @@ This mechanism allows packets to "flood" through the network efficiently, maximi
 
 ### 7.3. Time-To-Live (TTL)
 
-Every `BitchatPacket` contains an 8-bit TTL field. This value is set by the originating peer and is decremented by one at each relay hop. If a peer receives a packet and decrements its TTL to 0, it will process the packet (if it is the recipient) but will not relay it further. This is a crucial mechanism to prevent packets from circulating endlessly in the mesh.
+Every `SafeRelayPacket` contains an 8-bit TTL field. This value is set by the originating peer and is decremented by one at each relay hop. If a peer receives a packet and decrements its TTL to 0, it will process the packet (if it is the recipient) but will not relay it further. This is a crucial mechanism to prevent packets from circulating endlessly in the mesh.
 
 ### 7.4. Private vs. Broadcast Messages
 
 The routing logic respects the confidentiality of private messages:
 
-*   **Private Messages:** A packet with a specific `recipientID` is a private message. Relay nodes forward the entire, encrypted Noise message without being able to access the inner `BitchatPacket` or its payload. Only the final recipient, who shares the correct Noise session keys with the sender, can decrypt the packet.
+*   **Private Messages:** A packet with a specific `recipientID` is a private message. Relay nodes forward the entire, encrypted Noise message without being able to access the inner `SafeRelayPacket` or its payload. Only the final recipient, who shares the correct Noise session keys with the sender, can decrypt the packet.
 *   **Broadcast Messages:** A packet with the special broadcast `recipientID` (`0xFFFFFFFFFFFFFFFF`) is intended for all peers. Any peer that receives and decrypts a broadcast message will process its content. It will still be relayed according to the flooding algorithm to ensure it reaches the entire network.
 
 ### 7.5. Message Reliability and Lifecycle

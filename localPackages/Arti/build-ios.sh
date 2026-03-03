@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build arti-bitchat for iOS/macOS with aggressive size optimization
+# Build arti-SafeRelay for iOS/macOS with aggressive size optimization
 #
 # Output: Frameworks/arti.xcframework containing static libraries for:
 #   - aarch64-apple-ios (iOS device)
@@ -14,8 +14,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Configuration
-CRATE_NAME="arti-bitchat"
-LIB_NAME="libarti_bitchat.a"
+CRATE_NAME="arti-SafeRelay"
+LIB_NAME="libarti_SafeRelay.a"
 FRAMEWORK_NAME="arti"
 OUTPUT_DIR="$SCRIPT_DIR/Frameworks"
 
@@ -290,7 +290,7 @@ print_size_report() {
 
 # Main
 main() {
-    log_info "Building arti-bitchat for iOS/macOS"
+    log_info "Building arti-SafeRelay for iOS/macOS"
     log_info "=================================="
 
     check_prerequisites

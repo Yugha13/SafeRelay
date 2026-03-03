@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "CrisisMesh",
+    name: "SafeRelay",
     defaultLocalization: "en",
     platforms: [
         .iOS(.v16),
@@ -11,8 +11,8 @@ let package = Package(
     ],
     products: [
         .executable(
-            name: "CrisisMesh",
-            targets: ["CrisisMesh"]
+            name: "SafeRelay",
+            targets: ["SafeRelay"]
         ),
     ],
     dependencies:[
@@ -22,18 +22,18 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "CrisisMesh",
+            name: "SafeRelay",
             dependencies: [
                 .product(name: "P256K", package: "swift-secp256k1"),
                 .product(name: "BitLogger", package: "BitLogger"),
                 .product(name: "Tor", package: "Arti")
             ],
-            path: "CrisisMesh",
+            path: "SafeRelay",
             exclude: [
                 "Info.plist",
                 "Assets.xcassets",
-                "CrisisMesh.entitlements",
-                "CrisisMesh-macOS.entitlements",
+                "SafeRelay.entitlements",
+                "SafeRelay-macOS.entitlements",
                 "LaunchScreen.storyboard",
                 "ViewModels/Extensions/README.md"
             ],
@@ -42,9 +42,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "CrisisMeshTests",
-            dependencies: ["CrisisMesh"],
-            path: "CrisisMeshTests",
+            name: "SafeRelayTests",
+            dependencies: ["SafeRelay"],
+            path: "SafeRelayTests",
             exclude: [
                 "Info.plist",
                 "README.md"

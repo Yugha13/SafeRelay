@@ -45,9 +45,9 @@ Drop‑in steps
    - Detect a system Tor binary (e.g., /opt/homebrew/bin/tor) and run it as a subprocess to avoid bundling. Keep the embedded fallback for portability.
 
 torrc template
-The generated torrc (under Application Support/bitchat/tor/torrc) is:
+The generated torrc (under Application Support/SafeRelay/tor/torrc) is:
 
-  DataDirectory <AppSupport>/bitchat/tor
+  DataDirectory <AppSupport>/SafeRelay/tor
   ClientOnly 1
   SOCKSPort 127.0.0.1:39050
   ControlPort 127.0.0.1:39051
