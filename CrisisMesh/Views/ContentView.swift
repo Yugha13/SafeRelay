@@ -37,6 +37,7 @@ struct ContentView: View {
     @ObservedObject private var bookmarks = GeohashBookmarksStore.shared
     @State private var messageText = ""
     @FocusState private var isTextFieldFocused: Bool
+    @AppStorage("attachLocation") private var attachLocation: Bool = false
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -667,6 +668,8 @@ struct ContentView: View {
                         attachmentButton
                     }
                     
+                    locationToggleButton
+                    
                     sosButtonView
 
                     sendOrMicButton
@@ -786,8 +789,12 @@ struct ContentView: View {
     // MARK: - Actions
     
     private func sendMessage() {
-        let trimmed = trimmedMessageText
+        var trimmed = trimmedMessageText
         guard !trimmed.isEmpty else { return }
+
+        if attachLocation, let loc = LocationStateManager.shared.lastLocation {
+            trimmed += "\n📍 [GPS: \(loc.coordinate.latitude), \(loc.coordinate.longitude)]"
+        }
 
         // Clear input immediately for instant feedback
         messageText = ""
@@ -1743,6 +1750,25 @@ private extension ContentView {
         .buttonStyle(.plain)
         .accessibilityLabel("Choose photo")
         #endif
+    }
+    
+    private var locationToggleButton: some View {
+        Button(action: {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                attachLocation.toggle()
+            }
+        }) {
+            Image(systemName: attachLocation ? "location.fill" : "location")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundColor(attachLocation ? .red : secondaryTextColor)
+                .frame(width: 36, height: 36)
+                .background(
+                    Circle()
+                        .fill(attachLocation ? Color.red.opacity(0.15) : Color.clear)
+                )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Toggle attach location")
     }
 
     @ViewBuilder

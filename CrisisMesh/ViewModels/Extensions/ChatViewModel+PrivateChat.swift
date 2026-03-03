@@ -422,13 +422,18 @@ extension ChatViewModel {
 
     @MainActor
     func enqueueMediaMessage(content: String, targetPeer: PeerID?) -> BitchatMessage {
+        var finalContent = content
+        if UserDefaults.standard.bool(forKey: "attachLocation"), let loc = LocationStateManager.shared.lastLocation {
+            finalContent += "\n📍 [GPS: \(loc.coordinate.latitude), \(loc.coordinate.longitude)]"
+        }
+        
         let timestamp = Date()
         let message: BitchatMessage
 
         if let peerID = targetPeer {
             message = BitchatMessage(
                 sender: nickname,
-                content: content,
+                content: finalContent,
                 timestamp: timestamp,
                 isRelay: false,
                 originalSender: nil,
@@ -445,7 +450,7 @@ extension ChatViewModel {
             let (displayName, senderPeerID) = currentPublicSender()
             message = BitchatMessage(
                 sender: displayName,
-                content: content,
+                content: finalContent,
                 timestamp: timestamp,
                 isRelay: false,
                 originalSender: nil,
